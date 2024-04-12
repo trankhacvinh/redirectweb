@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Generate Redirect Links</title>
+</head>
+<body>
+<label for="originalLink">Original Link:</label>
+<input type="text" id="originalLink" placeholder="Enter the original link">
+<label for="numLinks">Number of Links:</label>
+<input type="number" id="numLinks" placeholder="Enter the number of links">
+<button id="generate">Generate Links</button>
+<div id="generatedLinks"></div>
+
+<script>
+document.getElementById('generate').addEventListener('click', function() {
+  const originalLink = document.getElementById('originalLink').value;
+  const numLinks = document.getElementById('numLinks').value;
+
+  fetch('/create-link', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ originalLink, numLinks }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    const linksContainer = document.getElementById('generatedLinks');
+    linksContainer.innerHTML = ''; // Xóa liên kết cũ
+    data.generatedLinks.forEach(link => {
+      const linkElement = document.createElement('div');
+      linkElement.textContent = link;
+      linksContainer.appendChild(linkElement);
+    });
+  });
+});
+</script>
+</body>
+</html>
